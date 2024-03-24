@@ -1,0 +1,27 @@
+name: Check Maven Dependencies for Updates
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Run this every Monday at 6:00 AM
+
+jobs:
+  check-for-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: maven
+
+      - name: Check for dependency updates
+        run: mvn versions:display-dependency-updates
+
+      - name: Check for plugin updates
+        run: mvn versions:display-plugin-updates
+
+      - name: Check for new project version
+        run: mvn versions:display-property-updates
