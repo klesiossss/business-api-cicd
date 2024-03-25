@@ -4,43 +4,38 @@ pipeline {
     triggers {
         pollSCM '* * * * *'
     }
-
     stages {
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh './gradlew assemble'
             }
         }
-
         stage('Test') {
             steps {
-                sh 'mvn test'
+                sh './gradlew test'
             }
         }
-
         stage('Build Docker image') {
             steps {
-                sh 'mvn docker:build'
+                sh './gradlew docker'
             }
         }
-
         stage('Push Docker image') {
             environment {
                 DOCKER_HUB_LOGIN = credentials('docker-hub')
             }
             steps {
                 sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
-                sh 'mvn docker:push'
+                sh './gradlew dockerPush -PdockerHubUsername=$DOCKER_HUB_LOGIN_USR'
             }
         }
-
         stage('Deploy to AWS') {
             environment {
                 DOCKER_HUB_LOGIN = credentials('docker-hub')
             }
             steps {
                 withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                    sh 'mvn aws-cloudformation:create-stack aws-cloudformation:wait --define subnetId=$SUBNET_ID --define dockerHubUsername=$DOCKER_HUB_LOGIN_USR --define region=$AWS_REGION'
+                    sh './gradlew awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=$SUBNET_ID -PdockerHubUsername=$DOCKER_HUB_LOGIN_USR -Pregion=$AWS_REGION'
                 }
             }
         }

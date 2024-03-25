@@ -7,12 +7,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh './gradlew assemble'
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
+                sh './gradlew test'
             }
         }
     }

@@ -17,7 +17,8 @@
 
     <properties>
         <java.version>11</java.version>
-        <dockerHubUsername>tkgregory</dockerHubUsername>
+        <dockerHubUsername>klesio123</dockerHubUsername>
+        <subnetId>subnet-03e548ac825b25858</subnetId>
     </properties>
 
     <dependencies>

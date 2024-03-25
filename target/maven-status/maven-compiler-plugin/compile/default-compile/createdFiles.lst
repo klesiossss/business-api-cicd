@@ -1,0 +1,4 @@
+com\tomgregory\controller\ThemeParkRideController.class
+com\tomgregory\entity\ThemeParkRide.class
+com\tomgregory\ThemeParkApplication.class
+com\tomgregory\repository\ThemeParkRideRepository.class
