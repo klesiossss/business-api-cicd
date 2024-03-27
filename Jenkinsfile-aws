@@ -37,10 +37,11 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 script {
+                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
                     if (isUnix()) {
-                        sh './gradlew docker'
+                        sh "${gradlewCmd} docker"
                     } else {
-                        bat 'gradlew.bat docker'
+                        bat "${gradlewCmd} docker"
                     }
                 }
             }
@@ -51,12 +52,13 @@ pipeline {
             }
             steps {
                 script {
+                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
                     if (isUnix()) {
                         sh "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
-                        sh './gradlew dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}'
+                        sh "${gradlewCmd} dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}"
                     } else {
                         bat "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
-                        bat 'gradlew.bat dockerPush -PdockerHubUsername=%DOCKER_HUB_LOGIN_USR%'
+                        bat "${gradlewCmd} dockerPush -PdockerHubUsername=%DOCKER_HUB_LOGIN_USR%"
                     }
                 }
             }
@@ -67,13 +69,14 @@ pipeline {
             }
             steps {
                 script {
+                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
                     if (isUnix()) {
                         withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                            sh './gradlew awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}'
+                            sh "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
                         }
                     } else {
                         withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                            bat 'gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=%SUBNET_ID% -PdockerHubUsername=%DOCKER_HUB_LOGIN_USR% -Pregion=%AWS_REGION%'
+                            bat "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=%SUBNET_ID% -PdockerHubUsername=%DOCKER_HUB_LOGIN_USR% -Pregion=%AWS_REGION%"
                         }
                     }
                 }
