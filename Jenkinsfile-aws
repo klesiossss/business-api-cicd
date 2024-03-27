@@ -6,76 +6,79 @@ pipeline {
     }
 
     stages {
-        stage('Prepare') {
-            steps {
-                script {
-                    // Determine the script command based on the OS
-                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    // Apply permissions on Unix-like systems only
-                    if(isUnix()) {
-                        sh 'chmod +x ./gradlew > /dev/null 2>&1 || true'
+
+            stage('Prepare') {
+                steps {
+                    script {
+                        // On Unix-like systems, make sure gradlew is executable
+                        if ('windows' != System.getProperty('os.name').toLowerCase().substring(0, 7)) {
+                            sh 'chmod +x ./gradlew || true'
+                        }
                     }
                 }
             }
-        }
         stage('Build') {
             steps {
-                script {
-                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    sh "${gradlewCmd} assemble"
-                }
+            if ('windows' == System.getProperty('os.name').toLowerCase().substring(0, 7)) {
+                bat 'gradlew assemble'
+            } else {
+                sh './gradlew assemble'
+             }
             }
         }
         stage('Test') {
             steps {
-                script {
-                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    sh "${gradlewCmd} test"
+             if ('windows' == System.getProperty('os.name').toLowerCase().substring(0, 7)) {
+                bat 'gradlew test'
+                } else{
+                sh './gradlew test'
                 }
             }
         }
         stage('Build Docker image') {
-            steps {
-                script {
-                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    sh "${gradlewCmd} docker"
-                }
+         steps {
+                if ('windows' == System.getProperty('os.name').toLowerCase().substring(0, 7)) {
+                         bat 'gradlew docker'
+                         } else{
+                         sh './gradlew docker'
+                         }
+                 }
+        }
+stage('Push Docker image') {
+    environment {
+        DOCKER_HUB_LOGIN = credentials('docker-hub')
+    }
+    steps {
+        script {
+            if ('windows' == System.getProperty('os.name').toLowerCase().substring(0, 7)) {
+                bat "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
+                bat "./gradlew dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}"
+            } else {
+                sh "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
+                sh "./gradlew dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}"
             }
         }
-        stage('Push Docker image') {
-            environment {
-                DOCKER_HUB_LOGIN = credentials('docker-hub')
-            }
-            steps {
-                script {
-                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    sh "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
-                    sh "${gradlewCmd} dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}"
+    }
+}
+
+stage('Deploy to AWS') {
+    environment {
+        DOCKER_HUB_LOGIN = credentials('docker-hub')
+    }
+    steps {
+        script {
+            if ('windows' == System.getProperty('os.name').toLowerCase().substring(0, 7)) {
+                withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
+                    bat "./gradlew awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
                 }
-            }
-        }
-        stage('Deploy to AWS') {
-            environment {
-                DOCKER_HUB_LOGIN = credentials('docker-hub')
-            }
-            steps {
-                script {
-                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                        sh "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
-                    }
+            } else {
+                withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
+                    sh "./gradlew awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
                 }
             }
         }
     }
 }
 
-// Utility method to check if the OS is Unix-like
-def isUnix() {
-    !isWindows()
-}
-
-// Utility method to check if the OS is Windows
-def isWindows() {
-    return current.build.environment.get('OS')?.toUpperCase()?.contains('WINDOWS')
+    }
 }
