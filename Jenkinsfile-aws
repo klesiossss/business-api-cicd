@@ -52,9 +52,12 @@ pipeline {
                     } else {
                     echo "Running Push Docker image  with command: ${gradlewCmd}"
                     echo "Running Push Docker image  DOCKER_HUB_LOGIN_USR: ${env.DOCKER_HUB_LOGIN_USR}"
-                    echo "Running Push Docker image  DOCKER_HUB_LOGIN_PSW: ${env.DOCKER_HUB_LOGIN_PSW}"
+                        echo "Running Push Docker started: image has run docker login"
                          "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
+                         echo "Running Push Docker finished: image has run docker login"
+                          echo "Running Push Docker start: image has run docker push"
                          "${gradlewCmd} dockerPush -PdockerHubUsername=%DOCKER_HUB_LOGIN_USR%"
+                         echo "Running Push Docker finished: image has run docker push"
                     }
                 }
             }
