@@ -6,23 +6,16 @@ pipeline {
     }
 
     stages {
-        stage('Prepare') {
-            steps {
-                script {
-                    // Determine the script command based on the OS
-                    def gradlewCmd = isUnix() ? 'sh ./gradlew' : 'gradlew.bat'
-                    // Apply permissions on Unix-like systems only
-                    if(isUnix()) {
-                        sh 'chmod +x ./gradlew > /dev/null 2>&1 || true'
-                    }
-                }
-            }
-        }
         stage('Build') {
             steps {
                 script {
-                    def gradlewCmd = isUnix() ? 'sh ./gradlew' : 'gradlew.bat'
-                     "${gradlewCmd} assemble"
+                        def gradlewCmd = isUnix() ? 'sh ./gradlew' : 'gradlew.bat'
+                                    if (isUnix()) {
+                                    sh 'chmod +x ./gradlew > /dev/null 2>&1 || true'
+                                    sh "${gradlewCmd} assemble"
+                                    } else {
+                                        "${gradlewCmd} assemble"
+                                    }
                 }
             }
         }
@@ -30,7 +23,7 @@ pipeline {
             steps {
                 script {
                     def gradlewCmd = isUnix() ? 'sh ./gradlew' : 'gradlew.bat'
-                    sh "${gradlewCmd} test"
+                     "${gradlewCmd} test"
                 }
             }
         }
