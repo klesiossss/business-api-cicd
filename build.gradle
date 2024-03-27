@@ -49,7 +49,7 @@ dockerRun {
 }
 
 aws {
-    region = findProperty('region') ?: 'us-east-1'
+    region = findProperty('region') ?: 'eu-central-1'
 }
 
 cloudFormation {
