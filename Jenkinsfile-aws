@@ -21,10 +21,6 @@ pipeline {
         }
         stage('Build Docker image') {
          steps {
-                     script {
-                         // Add Jenkins user to the Docker group quietly
-                         sh 'sudo usermod -aG docker jenkins > /dev/null 2>&1 || true'
-                     }
                      sh './gradlew docker'
                  }
         }
