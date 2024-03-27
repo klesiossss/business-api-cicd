@@ -49,8 +49,8 @@ pipeline {
             steps {
                 script {
                     def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
-                    sh "${gradlewCmd} dockerPush -PdockerHubUsername=$DOCKER_HUB_LOGIN_USR"
+                    sh "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
+                    sh "${gradlewCmd} dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}"
                 }
             }
         }
@@ -62,7 +62,7 @@ pipeline {
                 script {
                     def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
                     withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                        sh "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=$SUBNET_ID -PdockerHubUsername=$DOCKER_HUB_LOGIN_USR -Pregion=$AWS_REGION"
+                        sh "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
                     }
                 }
             }
@@ -72,5 +72,10 @@ pipeline {
 
 // Utility method to check if the OS is Unix-like
 def isUnix() {
-    !System.properties['os.name'].toLowerCase().contains('windows')
+    !isWindows()
+}
+
+// Utility method to check if the OS is Windows
+def isWindows() {
+    return current.build.environment.get('OS')?.toUpperCase()?.contains('WINDOWS')
 }
