@@ -43,35 +43,39 @@ stage('Deploy to AWS') {
     }
     steps {
         script {
-            // Initially assume the stack does not exist or is not in a deletable state
-            def shouldDeleteStack = false
+            // Wrap AWS commands with withAws to use configured AWS credentials and region
+            withAws(credentials: 'aws-credentials-id', region: 'eu-central-1') {
+                // Initially assume the stack does not exist or is not in a deletable state
+                def shouldDeleteStack = false
 
-            // Try to get the stack status
-            bat script: "aws cloudformation describe-stacks --stack-name spring-boot-api-example-stack --query 'Stacks[0].StackStatus' --output text > stackStatus.txt", returnStatus: true
+                // Try to get the stack status
+                bat script: "aws cloudformation describe-stacks --stack-name spring-boot-api-example-stack --query 'Stacks[0].StackStatus' --output text > stackStatus.txt", returnStatus: true
 
-            // Read the output file to check the stack status
-            def stackStatus = readFile('stackStatus.txt').trim()
-            echo "Stack status: ${stackStatus}"
+                // Read the output file to check the stack status
+                def stackStatus = readFile('stackStatus.txt').trim()
+                echo "Stack status: ${stackStatus}"
 
-            // Check if the stack is in a ROLLBACK_COMPLETE state
-            if (stackStatus == 'ROLLBACK_COMPLETE') {
-                shouldDeleteStack = true
+                // Check if the stack is in a ROLLBACK_COMPLETE state
+                if (stackStatus == 'ROLLBACK_COMPLETE') {
+                    shouldDeleteStack = true
+                }
+
+                // If the stack is in a ROLLBACK_COMPLETE state, delete it
+                if (shouldDeleteStack) {
+                    echo "Stack is in ROLLBACK_COMPLETE state, deleting..."
+                    bat "gradlew.bat awsCfnDeleteStack awsCfnWaitStackComplete"
+                    // Optionally, you might want to wait or check that the stack was successfully deleted before continuing
+                } else {
+                    echo "Stack is not in ROLLBACK_COMPLETE state or does not exist, proceeding with deployment..."
+                }
+
+                // Proceed with deployment
+                bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
             }
-
-            // If the stack is in a ROLLBACK_COMPLETE state, delete it
-            if (shouldDeleteStack) {
-                echo "Stack is in ROLLBACK_COMPLETE state, deleting..."
-                bat "gradlew.bat awsCfnDeleteStack awsCfnWaitStackComplete"
-                // Optionally, you might want to wait or check that the stack was successfully deleted before continuing
-            } else {
-                echo "Stack is not in ROLLBACK_COMPLETE state or does not exist, proceeding with deployment..."
-            }
-
-            // Proceed with deployment
-            bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
         }
     }
 }
+
 
 
 
