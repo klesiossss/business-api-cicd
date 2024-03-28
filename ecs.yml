@@ -10,6 +10,7 @@ Parameters:
     Type: String
   VPCId:
     Type: String
+    Default: "vpc-0dbebaf6039f5ff02"
 Resources:
   Cluster:
     Type: AWS::ECS::Cluster
@@ -85,5 +86,5 @@ Resources:
     Properties:
       Port: 8080
       Protocol: HTTP
-      VpcId: "vpc-0dbebaf6039f5ff02" # You need to add your VPC ID here
+      VpcId: !Ref VPCId # You need to add your VPC ID here
       TargetType: ip
