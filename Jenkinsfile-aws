@@ -44,7 +44,7 @@ stage('Deploy to AWS') {
     steps {
         script {
             // Wrap AWS commands with withAws to use configured AWS credentials and region
-            withAws(credentials: 'aws-credentials-id', region: 'eu-central-1') {
+            withAws(credentials: 'aws-credentials', region: 'eu-central-1') {
                 // Initially assume the stack does not exist or is not in a deletable state
                 def shouldDeleteStack = false
 
