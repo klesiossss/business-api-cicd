@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   SubnetID:
     Type: String
-    Defualt: "subnet-03e548ac825b25858"
+    Default: "subnet-03e548ac825b25858"
   ServiceName:
     Type: String
   ServiceVersion:
@@ -11,7 +11,7 @@ Parameters:
     Type: String
   VpcId:                       # Add this block
     Type: String
-    Defualt: "vpc-0dbebaf6039f5ff02"
+    Default: "vpc-0dbebaf6039f5ff02"
     Description: The VPC ID where the service will be deployed.
 Resources:
   Cluster:
