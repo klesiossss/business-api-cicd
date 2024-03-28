@@ -2,6 +2,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   SubnetID:
     Type: String
+    Default: "subnet-03e548ac825b25858"
   ServiceName:
     Type: String
   ServiceVersion:
@@ -11,11 +12,13 @@ Parameters:
   VPCId:
     Type: String
     Default: "vpc-0dbebaf6039f5ff02"
+
 Resources:
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: deployment-example-cluster
+
   ServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -26,6 +29,7 @@ Resources:
           FromPort: 8080
           ToPort: 8080
           CidrIp: 0.0.0.0/0
+
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -41,6 +45,7 @@ Resources:
       RequiresCompatibilities:
         - EC2
         - FARGATE
+
   Service:
     Type: AWS::ECS::Service
     Properties:
@@ -55,11 +60,22 @@ Resources:
           TargetGroupArn: !Ref TargetGroup
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: DISABLED # Typically set to DISABLED when behind a load balancer
+          AssignPublicIp: DISABLED
           Subnets:
             - !Ref SubnetID
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: LoadBalancerSecurityGroup
+      GroupDescription: Security group for load balancer
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
 
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -67,7 +83,7 @@ Resources:
       Subnets:
         - !Ref SubnetID
       SecurityGroups:
-        - !GetAtt ServiceSecurityGroup.GroupId
+        - !GetAtt LoadBalancerSecurityGroup.GroupId
       Scheme: internet-facing
       Type: application
 
@@ -86,5 +102,5 @@ Resources:
     Properties:
       Port: 8080
       Protocol: HTTP
-      VpcId: !Ref VPCId # You need to add your VPC ID here
+      VpcId: !Ref VPCId
       TargetType: ip
