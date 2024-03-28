@@ -13,6 +13,7 @@ pipeline {
                         error('This pipeline script is meant to run on Windows only.')
                     }
                     def gradlewCmd = 'gradlew.bat'
+                    bat "${gradlewCmd} clean"
                     bat "${gradlewCmd} assemble"
                 }
             }
