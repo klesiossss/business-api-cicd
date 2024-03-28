@@ -43,9 +43,8 @@ pipeline {
             }
             steps {
                 script {
-                    def gradlewCmd = 'gradlew.bat'
                     bat "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
-                    bat "${gradlewCmd} dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}"
+                    bat "gradlew.bat dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}"
                 }
             }
         }
@@ -55,13 +54,9 @@ pipeline {
 
             }
             steps {
-                    script{
-                                def gradlewCmd = 'gradlew.bat'
-                                def latestTag = "klesio123/spring-boot-api-example:0.1.0-SNAPSHOT"
-                                bat "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
-                                bat "docker pull ${latestTag}"
-            }
+
               withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
+                    bat "gradlew.bat awsCfnDeleteStack awsCfnWaitStackComplete"
                     bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
 
                  }
