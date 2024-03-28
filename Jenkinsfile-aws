@@ -9,33 +9,30 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                        def gradlewCmd = isUnix() ? 'sh ./gradlew' : 'gradlew.bat'
-                                    if (isUnix()) {
-                                    sh 'chmod +x ./gradlew > /dev/null 2>&1 || true'
-                                    sh "${gradlewCmd} assemble"
-                                    } else {
-                                        '${gradlewCmd} assemble'
-                                    }
+                    if (isUnix()) {
+                        error('This pipeline script is meant to run on Windows only.')
+                    }
+                    def gradlewCmd = 'gradlew.bat'
+                    bat "${gradlewCmd} assemble"
                 }
             }
         }
         stage('Test') {
             steps {
                 script {
-                    def gradlewCmd = isUnix() ? 'sh ./gradlew' : 'gradlew.bat'
-                     '${gradlewCmd} test'
+                    if (isUnix()) {
+                        error('This pipeline script is meant to run on Windows only.')
+                    }
+                    def gradlewCmd = 'gradlew.bat'
+                    bat "${gradlewCmd} test"
                 }
             }
         }
         stage('Build Docker image') {
             steps {
                 script {
-                    def gradlewCmd = isUnix() ? 'sh ./gradlew' : 'gradlew.bat'
-                    if (isUnix()) {
-                        sh "${gradlewCmd} docker"
-                    } else {
-                        '${gradlewCmd} docker'
-                    }
+                    def gradlewCmd = 'gradlew.bat'
+                    bat "${gradlewCmd} docker"
                 }
             }
         }
@@ -45,15 +42,9 @@ pipeline {
             }
             steps {
                 script {
-                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    if (isUnix()) {
-                        sh "docker login --username=${DOCKER_HUB_LOGIN_USR} --password=${DOCKER_HUB_LOGIN_PSW}"
-                        sh "${gradlewCmd} dockerPush -PdockerHubUsername=${DOCKER_HUB_LOGIN_USR}"
-                    } else {
-                         'docker login --username=${DOCKER_HUB_LOGIN_USR} --password=${DOCKER_HUB_LOGIN_PSW}'
-                         '${gradlewCmd} dockerPush -PdockerHubUsername=DOCKER_HUB_LOGIN_USR'
-
-                    }
+                    def gradlewCmd = 'gradlew.bat'
+                    bat "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
+                    bat "${gradlewCmd} dockerPush -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR}"
                 }
             }
         }
@@ -63,17 +54,8 @@ pipeline {
             }
             steps {
                 script {
-                    def gradlewCmd = isUnix() ? './gradlew' : 'gradlew.bat'
-                    if (isUnix()) {
-                        withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                            sh "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
-                        }
-                    } else {
-                        withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                          echo "Running Deploy to AWS  with command: ${gradlewCmd}"
-                             '${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=%SUBNET_ID% -PdockerHubUsername=%DOCKER_HUB_LOGIN_USR% -Pregion=%AWS_REGION%'
-                        }
-                    }
+                    def gradlewCmd = 'gradlew.bat'
+                    bat "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=%SUBNET_ID% -PdockerHubUsername=%DOCKER_HUB_LOGIN_USR% -Pregion=%AWS_REGION%"
                 }
             }
         }
