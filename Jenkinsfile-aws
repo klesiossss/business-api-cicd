@@ -56,7 +56,7 @@ pipeline {
             steps {
 
               withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                    bat "gradlew.bat awsCfnDeleteStack awsCfnWaitStackComplete"
+
                     bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
 
                  }
