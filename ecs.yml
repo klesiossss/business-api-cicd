@@ -8,6 +8,8 @@ Parameters:
     Type: String
   DockerHubUsername:
     Type: String
+  VPCId:
+    Type: String
 Resources:
   Cluster:
     Type: AWS::ECS::Cluster
@@ -83,5 +85,5 @@ Resources:
     Properties:
       Port: 8080
       Protocol: HTTP
-      VpcId: !Ref vpc-0dbebaf6039f5ff02 # You need to add your VPC ID here
+      VpcId: "vpc-0dbebaf6039f5ff02" # You need to add your VPC ID here
       TargetType: ip
