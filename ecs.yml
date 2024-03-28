@@ -46,10 +46,42 @@ Resources:
       TaskDefinition: !Ref TaskDefinition
       DesiredCount: 1
       LaunchType: FARGATE
+      LoadBalancers:
+        - ContainerName: !Sub ${ServiceName}-container
+          ContainerPort: 8080
+          TargetGroupArn: !Ref TargetGroup
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
+          AssignPublicIp: DISABLED # Typically set to DISABLED when behind a load balancer
           Subnets:
             - !Ref SubnetID
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
+
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Subnets:
+        - !Ref SubnetID
+      SecurityGroups:
+        - !GetAtt ServiceSecurityGroup.GroupId
+      Scheme: internet-facing
+      Type: application
+
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: 8080
+      Protocol: HTTP
+      VpcId: !Ref vpc-0dbebaf6039f5ff02 # You need to add your VPC ID here
+      TargetType: ip
