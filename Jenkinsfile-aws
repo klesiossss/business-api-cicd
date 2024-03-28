@@ -35,7 +35,7 @@ stage('Build Docker image') {
     }
     steps {
         script {
-        C:\Developer\Tools\git\cmd\git.exe
+
 
             def gradlewCmd = 'gradlew.bat'
             // Resolve build number and Git commit hash
