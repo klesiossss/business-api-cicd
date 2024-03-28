@@ -42,7 +42,7 @@ stage('Deploy to AWS') {
         script {
             // Wrap AWS commands with withAws to use configured AWS credentials and region
             withAWS(credentials: 'aws-credentials', region: 'eu-central-1') {
-                    bat "gradlew.bat awsCfnDeleteStack awsCfnWaitStackComplete"
+
                      bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
             }
         }
