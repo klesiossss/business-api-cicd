@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     def gradlewCmd = 'gradlew.bat'
-                    bat "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=SUBNET_ID -PdockerHubUsername=DOCKER_HUB_LOGIN_USR -Pregion=AWS_REGION"
+                    bat "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
                 }
             }
         }
