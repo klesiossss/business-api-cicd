@@ -2,26 +2,26 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   SubnetID:
     Type: String
-    Default: "subnet-03e548ac825b25858"
+    Defualt: "subnet-03e548ac825b25858"
   ServiceName:
     Type: String
   ServiceVersion:
     Type: String
   DockerHubUsername:
     Type: String
-  VPCId:
+  VpcId:                       # Add this block
     Type: String
-    Default: "vpc-0dbebaf6039f5ff02"
-
+    Defualt: "vpc-0dbebaf6039f5ff02"
+    Description: The VPC ID where the service will be deployed.
 Resources:
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: deployment-example-cluster
-
   ServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
+      VpcId: !Ref VpcId        # Associate with VPC
       GroupName: ServiceSecurityGroup
       GroupDescription: Security group for service
       SecurityGroupIngress:
@@ -29,7 +29,6 @@ Resources:
           FromPort: 8080
           ToPort: 8080
           CidrIp: 0.0.0.0/0
-
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -45,7 +44,6 @@ Resources:
       RequiresCompatibilities:
         - EC2
         - FARGATE
-
   Service:
     Type: AWS::ECS::Service
     Properties:
@@ -54,53 +52,10 @@ Resources:
       TaskDefinition: !Ref TaskDefinition
       DesiredCount: 1
       LaunchType: FARGATE
-      LoadBalancers:
-        - ContainerName: !Sub ${ServiceName}-container
-          ContainerPort: 8080
-          TargetGroupArn: !Ref TargetGroup
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: DISABLED
+          AssignPublicIp: ENABLED
           Subnets:
             - !Ref SubnetID
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
-
-  LoadBalancerSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: LoadBalancerSecurityGroup
-      GroupDescription: Security group for load balancer
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-
-  LoadBalancer:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Subnets:
-        - !Ref SubnetID
-      SecurityGroups:
-        - !GetAtt LoadBalancerSecurityGroup.GroupId
-      Scheme: internet-facing
-      Type: application
-
-  Listener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref TargetGroup
-      LoadBalancerArn: !Ref LoadBalancer
-      Port: 80
-      Protocol: HTTP
-
-  TargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      Port: 8080
-      Protocol: HTTP
-      VpcId: !Ref VPCId
-      TargetType: ip
