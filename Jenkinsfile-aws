@@ -35,10 +35,13 @@ stage('Build Docker image') {
     }
     steps {
         script {
+        C:\Developer\Tools\git\cmd\git.exe
+
             def gradlewCmd = 'gradlew.bat'
             // Resolve build number and Git commit hash
             def buildNumber = env.BUILD_NUMBER
-            def gitCommit = bat(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+            def gitExecutable = "C:\Developer\Tools\git\cmd\git.exe"
+            def gitCommit = bat(script: "\"${gitExecutable}\" rev-parse --short HEAD", returnStdout: true).trim()
 
             // Construct the image tag from the build number and Git commit
             def imageTag = "${buildNumber}-${gitCommit}"
@@ -60,7 +63,8 @@ stage('Push Docker image') {
 
             // Resolve build number and Git commit hash
             def buildNumber = env.BUILD_NUMBER
-            def gitCommit = bat(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+            def gitExecutable = "C:\Developer\Tools\git\cmd\git.exe"
+            def gitCommit = bat(script: "\"${gitExecutable}\" rev-parse --short HEAD", returnStdout: true).trim()
 
             // Construct the image tag from the build number and Git commit
             def imageTag = "${buildNumber}-${gitCommit}"
