@@ -4,6 +4,9 @@ pipeline {
     triggers {
         pollSCM '* * * * *'
     }
+     environment {
+            JAVA_HOME = '/Users/klesiosilva/Library/Java/JavaVirtualMachines/corretto-11.0.20.1/Contents/Home'
+        }
 
     stages {
         stage('Build') {
@@ -13,10 +16,8 @@ pipeline {
                       if (isUnix()) {
                          gradlewCmd = './gradlew'
                       }
-                          // Execute 'java -version' command and capture the output
-                        def javaVersionOutput = sh(script: 'java -version', returnStdout: true).trim()
-                        // Print the Java version output
-                       echo "Java version: ${javaVersionOutput}"
+                        // Print JAVA_HOME for verification
+                          echo "JAVA_HOME: ${env.JAVA_HOME}"
 
 
 
