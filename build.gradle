@@ -36,10 +36,12 @@ String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'klesio1
 
 scmVersion {
     tag {
-        prefix = 'v'
+        prefix = 'v' // Adjust the tag prefix as needed
     }
-    versionIncrementer 'incremental' // Default is 'incremental', other options: 'incrementMajor', 'incrementMinor', 'incrementPatch'
+    versionCreator 'versionWithBranch' // Example of specifying how version should be created
+    // Define any additional configuration here.
 }
+
 
 
 version = scmVersion.version
