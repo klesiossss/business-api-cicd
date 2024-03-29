@@ -19,7 +19,7 @@ public class ThemeParkApplication  {
             repository.save(new ThemeParkRide("Rollercoaster", "Train ride that speeds you along.", 5, 3));
             repository.save(new ThemeParkRide("Log flume", "Boat ride with plenty of splashes.", 3, 2));
             repository.save(new ThemeParkRide("Teacups", "Spinning ride in a giant tea-cup.", 2, 4));
-            repository.save(new ThemeParkRide("MyRide", "Spinning ride in the world.", 1, 5));
+
         };
     }
 }

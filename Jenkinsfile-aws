@@ -40,46 +40,17 @@ stage('Deploy to AWS') {
     }
     steps {
         script {
-            // Flag to track deployment status
-            def deploymentSuccessful = false
-
             try {
-                // Wrap AWS commands with withAWS to use configured AWS credentials and region
                 withAWS(credentials: 'aws-credentials', region: 'eu-central-1') {
-                    // Attempt to migrate/deploy the CloudFormation stack
                     bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
-
-                    // If the deployment command succeeds, set the flag to true
-                    deploymentSuccessful = true
                 }
             } catch (Exception e) {
                 // Log the error
                 echo "Deployment failed: ${e.getMessage()}"
-            } finally {
-                if (!deploymentSuccessful) {
-                    // Handle rollback if deployment was not successful
-                    echo "Initiating rollback..."
-
-                    // Insert your rollback logic here. This could involve calling a script to revert to a previous stack snapshot,
-                    // delete the current stack, or any other rollback mechanism appropriate for your deployment
-                    // For example, a rollback to a previous stack snapshot might look like this:
-                       bat "gradlew.bat awsCfnDeleteStack awsCfnWaitStackComplete"
-                      bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
-
-
-                    // Note: Ensure you have a rollback strategy. AWS CloudFormation has built-in rollback capabilities for failed stack updates,
-                    // but you might need custom logic for more complex scenarios.
-                } else {
-                    echo "Deployment successful."
-                }
             }
         }
     }
 }
-
-
-
-
 
     }
 }
