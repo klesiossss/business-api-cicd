@@ -46,6 +46,12 @@ scmVersion {
 
 version = scmVersion.version
 
+task printVersion {
+    doLast {
+        println 'Version: ' + scmVersion.version
+    }
+}
+
 String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:$version"
 
 
