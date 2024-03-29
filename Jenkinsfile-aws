@@ -13,7 +13,13 @@ pipeline {
                       if (isUnix()) {
                          gradlewCmd = './gradlew'
                       }
-                    sh "rm -rf /var/lib/jenkins/.gradle/caches"
+                          // Execute 'java -version' command and capture the output
+                        def javaVersionOutput = sh(script: 'java -version', returnStdout: true).trim()
+                        // Print the Java version output
+                       echo "Java version: ${javaVersionOutput}"
+
+
+
                       sh "${gradlewCmd} clean"
                      sh "${gradlewCmd} assemble"
                     }
