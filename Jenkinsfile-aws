@@ -13,7 +13,7 @@ pipeline {
                       if (isUnix()) {
                          gradlewCmd = './gradlew'
                       }
-
+                      sh "${gradlewCmd} wrapper"
                       sh "${gradlewCmd} clean"
                      sh "${gradlewCmd} assemble"
                     }
@@ -61,7 +61,7 @@ stage('Deploy to AWS') {
                 // Wrap AWS commands with withAWS to use configured AWS credentials and region
                 withAWS(credentials: 'aws-credentials', region: 'eu-central-1') {
                     // Attempt to migrate/deploy the CloudFormation stack
-                    sh "${gradlewCmd} awsCfnMigrateStacknonExitente awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
+                    sh "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
 
                     // If the deployment command succeeds, set the flag to true
                     deploymentSuccessful = true
