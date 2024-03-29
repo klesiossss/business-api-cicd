@@ -9,7 +9,7 @@ Parameters:
     Type: String
   DockerHubUsername:
     Type: String
-  VpcId:                       # Add this block
+  VpcId:                       # Add
     Type: String
     Default: "vpc-0dbebaf6039f5ff02"
     Description: The VPC ID where the service will be deployed.
@@ -17,7 +17,7 @@ Resources:
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: deployment-example-cluster
+      ClusterName: deployment-cluster
   ServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
