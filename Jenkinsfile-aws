@@ -11,11 +11,11 @@ pipeline {
                 script {
                  def gradlewCmd = 'gradlew.bat'
                       if (isUnix()) {
-                         gradlewCmd = './gradlew'
+                         gradlewCmd = 'sh ./gradlew'
                       }
 
-                     "${gradlewCmd} clean"
-                     "${gradlewCmd} assemble"
+                      '${gradlewCmd} clean'
+                     '${gradlewCmd} assemble'
                     }
                 }
             }
@@ -25,9 +25,9 @@ pipeline {
                 script {
                    def gradlewCmd = 'gradlew.bat'
                        if (isUnix()) {
-                         gradlewCmd = './gradlew'
+                         gradlewCmd = 'sh ./gradlew'
                        }
-                     "${gradlewCmd} test"
+                      '${gradlewCmd} test'
 
                 }
             }
@@ -37,9 +37,9 @@ pipeline {
                 script {
                 def gradlewCmd = 'gradlew.bat'
                     if (isUnix()) {
-                        gradlewCmd = './gradlew'
+                        gradlewCmd = 'sh ./gradlew'
                    }
-                     "${gradlewCmd} docker"
+                     '${gradlewCmd} docker'
 
                 }
             }
@@ -52,16 +52,16 @@ stage('Deploy to AWS') {
         script {
             // Flag to track deployment status
             def deploymentSuccessful = false
-            def gradlewCmd = "gradlew.bat"
+            def gradlewCmd = 'gradlew.bat'
                    if (isUnix()) {
-                      gradlewCmd = './gradlew'
+                      gradlewCmd = 'sh ./gradlew'
                      }
 
             try {
                 // Wrap AWS commands with withAWS to use configured AWS credentials and region
                 withAWS(credentials: 'aws-credentials', region: 'eu-central-1') {
                     // Attempt to migrate/deploy the CloudFormation stack
-                     "${gradlewCmd} awsCfnMigrateStacknonExitente awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
+                     '${gradlewCmd} awsCfnMigrateStacknonExitente awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}'
 
                     // If the deployment command succeeds, set the flag to true
                     deploymentSuccessful = true
@@ -77,7 +77,7 @@ stage('Deploy to AWS') {
                     // Insert your rollback logic here. This could involve calling a script to revert to a previous stack snapshot,
                     // delete the current stack, or any other rollback mechanism appropriate for your deployment
                     // For example, a rollback to a previous stack snapshot might look like this:
-                      "{gradlewCmd} awsCfnRollbackStack -PstackName=spring-boot-api-exemple-stack"
+                      '{gradlewCmd} awsCfnRollbackStack -PstackName=spring-boot-api-exemple-stack'
 
                     // Note: Ensure you have a rollback strategy. AWS CloudFormation has built-in rollback capabilities for failed stack updates,
                     // but you might need custom logic for more complex scenarios.
