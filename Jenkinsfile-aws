@@ -13,7 +13,7 @@ pipeline {
                       if (isUnix()) {
                          gradlewCmd = './gradlew'
                       }
-                      sh "${gradlewCmd} wrapper"
+
                       sh "${gradlewCmd} clean"
                      sh "${gradlewCmd} assemble"
                     }
