@@ -8,7 +8,7 @@ plugins {
     id 'jp.classmethod.aws.reboot.cloudformation' version '0.45'
 }
 
-version = scmVersion.version
+
 
 repositories {
     mavenCentral()
@@ -33,7 +33,20 @@ test {
 }
 
 String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'klesio123'
-String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example1:$version"
+
+scmVersion {
+    tag {
+        prefix = 'v'
+    }
+    versionIncrementer 'incremental' // Default is 'incremental', other options: 'incrementMajor', 'incrementMinor', 'incrementPatch'
+}
+
+
+version = scmVersion.version
+
+String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:$version"
+
+
 
 docker {
     name imageName

@@ -38,7 +38,7 @@ Resources:
       NetworkMode: awsvpc
       ContainerDefinitions:
         - Name: !Sub ${ServiceName}-container
-          Image: !Sub ${DockerHubUsername}/${ServiceName}:${ServiceVersion}-1
+          Image: !Sub ${DockerHubUsername}/${ServiceName}:${ServiceVersion}
           PortMappings:
             - ContainerPort: 8080
       RequiresCompatibilities:
