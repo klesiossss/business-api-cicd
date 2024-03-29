@@ -36,25 +36,26 @@ String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'klesio1
 
 scmVersion {
     tag {
-        prefix = 'v' // Adjust the tag prefix as needed
+        prefix = 'v'
     }
-    versionCreator 'versionWithBranch' // Example of specifying how version should be created
-    // Define any additional configuration here.
+    versionIncrementer 'incrementPatch' // ou qualquer outro incrementador de versão suportado
 }
 
 
 
 version = scmVersion.version
 
-task printVersion {
-    doLast {
-        println 'Version: ' + scmVersion.version
-    }
-}
+
 
 String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:$version"
 
-
+task printVersion {
+    doLast {
+        println 'Version: ' + scmVersion.version
+        println 'imagemName: '+ imageName
+        println 'version: '+ version
+    }
+}
 
 docker {
     name imageName
