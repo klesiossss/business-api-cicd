@@ -13,7 +13,7 @@ pipeline {
                       if (isUnix()) {
                          gradlewCmd = './gradlew'
                       }
-
+                    sh "rm -rf /var/lib/jenkins/.gradle/caches"
                       sh "${gradlewCmd} clean"
                      sh "${gradlewCmd} assemble"
                     }
