@@ -52,7 +52,7 @@ stage('Build') {
                                             bat "rmdir /s /q ${gradleCachePath.replaceAll('\\\\', '\\\\\\\\')}"
 
 
-                               bat "${gradlewCmd} build "
+                               bat "${gradlewCmd} clean build "
 
                                // Build the Docker image
                                bat "${gradlewCmd} docker "

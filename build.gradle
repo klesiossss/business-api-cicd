@@ -49,7 +49,7 @@ scmVersion {
 
 
 version = scmVersion.version
-
+project.version = scmVersion.version
 
 String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:${version}"
 
