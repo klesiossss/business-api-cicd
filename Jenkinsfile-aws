@@ -41,7 +41,7 @@ bat "git clean --force"
             bat "git rebase --skip"
             bat "git pull"
 
-
+  bat "git clean --force"
 
 
 
@@ -49,14 +49,14 @@ bat "git clean --force"
             // bat "git merge-base --is-ancestor HEAD origin/master"
 bat "git status"
             // Add all changes to the staging area
-            bat "git add . "
+         //   bat "git add . "
 bat "git status"
             // Commit the changes with a generic commit message
-            bat "git commit -m 'Commit'"
+          //  bat "git commit -m 'Commit'"
            // bat "${gradlewCmd} --stop"
             // Push the changes to the remote repository
-            bat "git push"
-            bat "git status"
+           // bat "git push"
+            //bat "git status"
 
 
             bat "git diff"
