@@ -5,13 +5,7 @@ pipeline {
             string(name: 'NEW_VERSION', defaultValue: '1.0.0', description: 'New project version')
         }
 
-          parameters {
-                booleanParam(
-                     name: 'CREATE_RELEASE',
-                     defaultValue: false,
-                     description: 'Do you want to create a release?'
-                )
-            }
+
 
     triggers {
         pollSCM '* * * * *'
