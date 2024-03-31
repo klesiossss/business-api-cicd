@@ -1,16 +1,18 @@
 pipeline {
     agent any
 
+          parameters {
+                booleanParam(
+                     name: 'CREATE_RELEASE',
+                     defaultValue: false,
+                     description: 'Do you want to create a release?'
+                )
+            }
+
     triggers {
         pollSCM '* * * * *'
     }
-        parameters {
-            booleanParam(
-                 name: 'CREATE_RELEASE',
-                 defaultValue: false,
-                 description: 'Do you want to create a release?'
-            )
-        }
+
 
     stages {
 stage('Build') {
