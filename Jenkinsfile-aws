@@ -28,17 +28,17 @@ stage('Build') {
             // Update PATH to include Git (adjust as necessary for your system)
             env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
 
-            // Git operations
+
             bat "git checkout master"
             bat "git status"
-            // Pull latest changes from the master branch, ensuring no rebase is performed
+
             bat "git pull origin master --no-rebase"
 
             // Attempt to add any changes (useful for version updates, etc.)
-            bat "git add ."
-            // Commit changes with a message. Adjust the message as necessary.
+            bat "git add . "
+
             bat 'git commit -m "Commit message explaining the changes"'
-            // Push changes back to the origin
+
             bat "git push"
 
             // Perform the release using Gradle. Adjust versions as necessary.
