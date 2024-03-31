@@ -44,11 +44,8 @@ stage('Build') {
             bat "git stash "
 
            // bat "git pull origin master"
+            bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${NEW_VERSION} -Prelease.snapshotDependencies=false -Prelease.createScmAdapter=true"
 
-
-
-                             // Run the release task with provided input
-                             bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${NEW_VERSION} -Prelease.snapshotDependencies=false -Prelease.createScmAdapter=true
 
         }
     }
