@@ -102,6 +102,12 @@ build.dependsOn writeDockerImageNameToFile
 // or if you have a specific Docker task
 docker.dependsOn writeDockerImageNameToFile
 
+tasks.named('docker').configure {
+    dependsOn 'printVersion'
+    doFirst {
+        println "Building and pushing Docker image with name: $imageName"
+    }
+}
 
 
 task('doStuff', type: Copy) {
