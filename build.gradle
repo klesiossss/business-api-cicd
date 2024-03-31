@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE' // Update to the latest version
     id 'org.springframework.boot' version '2.5.5' // Use a valid Spring Boot plugin version
-    id 'pl.allegro.tech.build.axion-release' version '1.17.0'
+    id 'net.researchgate.release' version '2.8.1'
     id 'com.palantir.docker' version '0.34.0'
     id 'com.palantir.docker-run' version '0.34.0'
     id 'jp.classmethod.aws.reboot.cloudformation' version '0.45'
@@ -34,13 +34,20 @@ test {
 
 String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'klesio123'
 
-scmVersion {
-    versionIncrementer 'incrementPatch'
-    tag {
-        prefix = 'v' // Custom tag prefix, default is 'v'
+release {
+    // Optional: Specify a version property file if you're not using the default project version
+    // versionPropertyFile = 'gradle.properties'
+
+    // Configure the versioning strategy here. For example, to increment the patch version
+    versionPatterns = [
+            /(\d+)\.(\d+)\.(\d+)/: { matcher, project -> matcher.replaceAll("${matcher[0]}.${matcher[1]}.(${matcher[2].toInteger() + 1})") }
+    ]
+
+    // Commit customizations, tagging options, etc.
+    git {
+        requireBranch = 'main' // Only allow releases from the 'main' branch
+        // Custom commit messages, tagging options, etc.
     }
-    versionCreator 'versionWithBranch' // Example of specifying how version should be created
-    // Define any additional configuration here.
 }
 
 
@@ -48,10 +55,9 @@ scmVersion {
 
 
 
-version = scmVersion.version
-project.version = scmVersion.version
 
-String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:${version}"
+
+String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:${project.version }"
 
 task printVersion {
     doLast {
