@@ -8,7 +8,6 @@ pipeline {
 
     stages {
 stage('Build') {
-
     steps {
         script {
             if (isUnix()) {
@@ -16,35 +15,38 @@ stage('Build') {
             }
             def gradlewCmd = 'gradlew.bat'
 
-
-
-             String gradleCachePath = "${env.USERPROFILE}\\.gradle\\caches"
+            // Define the Gradle cache path
+            String gradleCachePath = "${env.USERPROFILE}\\.gradle\\caches"
+            // Uncomment the lines below if you need to clear the Gradle cache before building
             // echo "Deleting Gradle caches from: ${gradleCachePath}"
-             //bat "${gradlewCmd} --stop  "
-             //bat "rmdir /s /q ${gradleCachePath.replaceAll('\\\\', '\\\\\\\\')}"
-             bat "${gradlewCmd} clean build "
+            // bat "${gradlewCmd} --stop"
+            // bat "rmdir /s /q ${gradleCachePath.replaceAll('\\\\', '\\\\\\\\')}"
 
-            // Update PATH to include Git
+            // Clean and build the project
+            bat "${gradlewCmd} clean build"
+
+            // Update PATH to include Git (adjust as necessary for your system)
             env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
 
+            // Git operations
             bat "git checkout master"
-            bat "git status "
-           // bat "git stash "
+            bat "git status"
+            // Pull latest changes from the master branch, ensuring no rebase is performed
             bat "git pull origin master --no-rebase"
 
-            bat "git add . "
-            bat "git commit -m "Commit message explaining the changes" "
-            bat "git push origin master "
+            // Attempt to add any changes (useful for version updates, etc.)
+            bat "git add ."
+            // Commit changes with a message. Adjust the message as necessary.
+            bat 'git commit -m "Commit message explaining the changes" || echo "No changes to commit"'
+            // Push changes back to the origin
+            bat "git push origin master"
 
-           // bat "git pull origin master"
+            // Perform the release using Gradle. Adjust versions as necessary.
             bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
-
-
-
-
         }
     }
 }
+
         stage('Test') {
             steps {
                 script {
