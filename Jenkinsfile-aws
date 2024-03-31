@@ -44,7 +44,7 @@ stage('Build') {
             //bat "git commit -m 'Commit'"
             bat "${gradlewCmd} --stop"
             // Push the changes to the remote repository
-            bat "git push"
+          //  bat "git push"
 
 
 
