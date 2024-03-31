@@ -36,7 +36,12 @@ String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'klesio1
 
 release {
     git {
-        requireBranch = '(master|\\d+\\.\\d+)'
+        release {
+            git {
+                requireBranch = 'master' // This might cause an issue if `requireBranch` is now final or the API has changed
+            }
+        }
+
     }
 }
 
