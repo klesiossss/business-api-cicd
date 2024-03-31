@@ -83,8 +83,8 @@ release {
     failOnCommitNeeded = true
     failOnPublishNeeded = true
     failOnSnapshotDependencies = true
-    failOnUnversionedFiles = true
-    failOnUpdateNeeded = true
+    failOnUnversionedFiles = false
+    failOnUpdateNeeded = false
     revertOnFail = true
     preCommitText = ''
     preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
