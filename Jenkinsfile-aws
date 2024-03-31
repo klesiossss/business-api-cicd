@@ -6,34 +6,32 @@ pipeline {
     }
 
     stages {
-     stage('Build') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        error('Este script de pipeline deve ser executado apenas no Windows.')
-                    }
-                    def gradlewCmd = 'gradlew.bat'
-
-                    bat "${gradlewCmd} clean"
-                    bat "${gradlewCmd} build --rerun-tasks"
-
-                   env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
-
-                                 // Obtém o nome da branch local
-                                 def branchName = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
-
-                                 // Define a branch local para rastrear a branch remota 'origin/master'
-                                 bat "git branch --set-upstream-to=origin/master ${branchName}"
-
-                                 // Executa o comando release
-                                 bat "${gradlewCmd} release"
-                    // Define a branch local para rastrear a branch remota 'origin/master'
-
-                    // Executa o comando release
-                    bat "${gradlewCmd} release"
-                }
+stage('Build') {
+    steps {
+        script {
+            if (isUnix()) {
+                error('Este script de pipeline deve ser executado apenas no Windows.')
             }
+            def gradlewCmd = 'gradlew.bat'
+
+            bat "${gradlewCmd} clean"
+            bat "${gradlewCmd} build --rerun-tasks"
+
+            // Update PATH to include Git
+            env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
+
+            // Obtém o nome da branch local
+            def branchName = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+
+            // Define a branch local para rastrear a branch remota 'origin/master'
+            bat "git branch --set-upstream-to=origin/master ${branchName}"
+
+            // Executa o comando release
+            bat "${gradlewCmd} release"
         }
+    }
+}
+
         stage('Test') {
             steps {
                 script {
