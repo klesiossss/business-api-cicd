@@ -35,7 +35,7 @@ pipeline {
                    def gradlewCmd = 'gradlew.bat'
 
                                // Build the project using Gradle
-                               bat "${gradlewCmd} build"
+                               bat "${gradlewCmd} build --rerun-tasks"
 
                                // Build the Docker image
                                bat "${gradlewCmd} docker"
@@ -57,7 +57,7 @@ stage('Deploy to AWS') {
             try {
 
                         // Call your Gradle build
-                        bat "gradlew.bat build writeDockerImageNameToFile" // Assuming you're using Windows batch command
+                        bat "gradlew.bat build  writeDockerImageNameToFile" // Assuming you're using Windows batch command
 
                         // Read the imageName from the file
                         def dockerImageName = readFile("${WORKSPACE}/build/dockerImageName.txt").trim()
