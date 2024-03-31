@@ -32,7 +32,7 @@ stage('Build') {
             bat "git checkout master"
             bat "git status"
 
-            bat "git pull "
+            bat "git pull --no-rebase"
 
             bat "git add . "
 
