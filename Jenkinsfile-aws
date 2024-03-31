@@ -20,11 +20,11 @@ stage('Build') {
             // Update PATH to include Git
             env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
 
-            // Obtém o nome da branch local
-            def branchName = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+        // Obtém o nome da branch local
+        def branchName = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
 
-            // Define a branch local para rastrear a branch remota 'origin/master'
-            bat "git branch --set-upstream-to=origin/master ${branchName}"
+        // Define a branch local para rastrear a branch remota 'origin/master'
+        bat "git branch --set-upstream-to=origin/master ${branchName}"
 
             // Executa o comando release
             bat "${gradlewCmd} release"
