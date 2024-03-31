@@ -29,10 +29,16 @@ stage('Build') {
 
             bat "git checkout master"
             bat "git status "
-            bat "git stash "
+           // bat "git stash "
             bat "git pull origin master --no-rebase"
+
+            bat "git add . "
+            bat "git commit -m "Commit message explaining the changes" "
+            bat "git push origin master "
+
            // bat "git pull origin master"
             bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
+
 
 
 
