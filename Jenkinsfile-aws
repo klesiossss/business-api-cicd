@@ -19,8 +19,8 @@ stage('Build') {
             String gradleCachePath = "${env.USERPROFILE}\\.gradle\\caches"
             // Uncomment the lines below if you need to clear the Gradle cache before building
             // echo "Deleting Gradle caches from: ${gradleCachePath}"
-             bat "${gradlewCmd} --stop"
-             bat "rmdir /s /q ${gradleCachePath.replaceAll('\\\\', '\\\\\\\\')}"
+             //bat "${gradlewCmd} --stop"
+             //bat "rmdir /s /q ${gradleCachePath.replaceAll('\\\\', '\\\\\\\\')}"
 
             // Clean and build the project
             bat "${gradlewCmd} clean build"
@@ -36,7 +36,7 @@ stage('Build') {
 
             bat "git add . "
 
-            bat "git commit -m 'Commit' "
+            bat "git commit -m Commit "
 
             bat "git push"
 
