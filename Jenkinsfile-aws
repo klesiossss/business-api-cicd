@@ -36,12 +36,11 @@ stage('Build') {
 
             // Pull the latest changes from the remote master branch
             bat "git pull origin master --rebase"
-            try {
+
                             bat "git rebase --continue"
-                        } catch (Exception e) {
-                            bat "git rebase --abort"
-                            error "Rebase aborted due to conflicts. Manual intervention required."
-                        }
+
+                       //     bat "git rebase --abort"
+
 
 
            //  bat "git fetch origin"
