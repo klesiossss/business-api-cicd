@@ -42,11 +42,11 @@ stage('Build') {
 
             // Commit the changes with a generic commit message
             //bat "git commit -m 'Commit'"
-
+            bat "${gradlewCmd} --stop"
             // Push the changes to the remote repository
             bat "git push"
 
-            bat "${gradlewCmd} --stop"
+
 
             // Perform the release using Gradle. Adjust versions as necessary.
             bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
