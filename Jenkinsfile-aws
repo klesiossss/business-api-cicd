@@ -38,8 +38,8 @@ stage('Build') {
             env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
 
             bat "git checkout master"
-
-              bat "git push origin master"
+            bat "git status "
+            bat "git push origin master"
             bat "git pull origin master"
 
 
