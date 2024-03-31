@@ -21,7 +21,7 @@ pipeline {
                     def branchName = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
 
                     // Define a branch local para rastrear a branch remota 'origin/master'
-                    bat "git branch --set-upstream-to=origin/master ${branchName}"
+                    bat "\"C:\\Developer\\Tools\\git\\mingw64\\bin\\git.exe\" branch --set-upstream-to=origin/master ${branchName}"
 
                     // Executa o comando release
                     bat "${gradlewCmd} release"
