@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+     parameters {
+            string(name: 'NEW_VERSION', defaultValue: '1.0.0', description: 'New project version')
+        }
+
           parameters {
                 booleanParam(
                      name: 'CREATE_RELEASE',
@@ -42,35 +46,9 @@ stage('Build') {
            // bat "git pull origin master"
 
 
-               // Run the release task and provide input to handle prompts
-                             def userInput = input(
-                                 id: 'release-input',
-                                 message: 'Please provide input for release process',
-                                 parameters: [
-                                     choice(
-                                         choices: ['1.0.0', 'Other'],
-                                         description: 'Choose the release version'
-                                     ),
-                                     booleanParam(
-                                         defaultValue: false,
-                                         description: 'Use SNAPSHOT versions in between releases?',
-                                         name: 'useSnapshots'
-                                     ),
-                                     booleanParam(
-                                         defaultValue: false,
-                                         description: 'Create gradle.properties file with version 1.0.0?',
-                                         name: 'createGradleProperties'
-                                     )
-                                 ]
-                             )
-
-                             // Extract user input
-                             def releaseVersion = userInput[0] == 'Other' ? '' : userInput[0]
-                             def useSnapshots = userInput[1]
-                             def createGradleProperties = userInput[2]
 
                              // Run the release task with provided input
-                             bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${releaseVersion} -Prelease.snapshotDependencies=${useSnapshots} -Prelease.createScmAdapter=${createGradleProperties}"
+                             bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${NEW_VERSION} -Prelease.snapshotDependencies=false -Prelease.createScmAdapter=true
 
         }
     }
