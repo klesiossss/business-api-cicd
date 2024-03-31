@@ -125,7 +125,7 @@ release {
 publishing {
     repositories {
         maven {
-            url = "https://your-company-nexus-repo.com/repositories"
+           // url = "https://your-company-nexus-repo.com/repositories"
         }
     }
     publications {
