@@ -35,11 +35,15 @@ test {
 String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'klesio123'
 
 scmVersion {
-    tag {
-        prefix = 'v'
-    }
-    versionIncrementer 'incrementPatch' // ou qualquer outro incrementador de versão suportado
+    versionIncrementer 'incrementMinor'
+    branchVersionIncrementer = [
+            'hotfix-.*' : { c -> c.currentVersion.incrementPatchVersion() }
+    ]
+    branchVersionCreator = [
+            'topic-.*' : 'versionWithBranch'
+    ]
 }
+
 
 
 
