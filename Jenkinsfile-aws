@@ -47,7 +47,6 @@ stage('Deploy to AWS') {
         script {
             try {
 
-             script {
                         // Call your Gradle build
                         bat "gradlew.bat build writeDockerImageNameToFile" // Assuming you're using Windows batch command
 
