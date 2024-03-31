@@ -35,9 +35,7 @@ stage('Build') {
             bat "git status"
 
             // Pull the latest changes from the remote master branch
-            bat "git pull"
-
-            bat "git config pull.ff only"
+            bat "git pull origin master --rebase"
 
             // Add all changes to the staging area
            // bat "git add . "
