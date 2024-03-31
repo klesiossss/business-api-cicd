@@ -14,7 +14,7 @@ pipeline {
                     }
                     def gradlewCmd = 'gradlew.bat'
                     bat "${gradlewCmd} clean"
-                    bat "${gradlewCmd} assemble"
+                    bat "${gradlewCmd} build"
                 }
             }
         }
