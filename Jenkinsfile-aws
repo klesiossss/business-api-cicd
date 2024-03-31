@@ -32,9 +32,8 @@ stage('Build') {
             bat "git checkout master"
             bat "git status"
 
-            bat "git pull origin master --no-rebase"
+            bat "git pull origin master "
 
-            // Attempt to add any changes (useful for version updates, etc.)
             bat "git add . "
 
             bat 'git commit -m "Commit message explaining the changes"'
