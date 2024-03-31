@@ -36,10 +36,16 @@ stage('Build') {
 
             // Pull the latest changes from the remote master branch
             bat "git pull origin master --rebase"
-             bat "git fetch"
+            try {
+                            bat "git rebase --continue"
+                        } catch (Exception e) {
+                            bat "git rebase --abort"
+                            error "Rebase aborted due to conflicts. Manual intervention required."
+                        }
 
-             bat "git fetch origin"
-             bat "git merge-base --is-ancestor HEAD origin/master"
+
+           //  bat "git fetch origin"
+            // bat "git merge-base --is-ancestor HEAD origin/master"
 bat "git status"
             // Add all changes to the staging area
             bat "git add . "
