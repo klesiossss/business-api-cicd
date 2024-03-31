@@ -13,6 +13,7 @@ pipeline {
                         error('This pipeline script is meant to run on Windows only.')
                     }
                     def gradlewCmd = 'gradlew.bat'
+                    bat "rmdir /s /q "%USERPROFILE%\\.gradle\\caches"
                     bat "${gradlewCmd} clean"
                     bat "${gradlewCmd} build --rerun-tasks"
                 }
