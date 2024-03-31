@@ -28,16 +28,22 @@ stage('Build') {
             // Update PATH to include Git (adjust as necessary for your system)
             env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
 
-
+            // Checkout the master branch
             bat "git checkout master"
+
+            // Check the status of the repository
             bat "git status"
 
+            // Pull the latest changes from the remote master branch
             bat "git pull origin master --no-rebase"
 
+            // Add all changes to the staging area
             bat "git add . "
 
-            bat "git commit -m Commit "
+            // Commit the changes with a generic commit message
+            bat "git commit -m 'Commit'"
 
+            // Push the changes to the remote repository
             bat "git push"
 
             // Perform the release using Gradle. Adjust versions as necessary.
@@ -45,6 +51,7 @@ stage('Build') {
         }
     }
 }
+
 
         stage('Test') {
             steps {
