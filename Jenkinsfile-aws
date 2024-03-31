@@ -37,9 +37,9 @@ stage('Build') {
             // Attempt to add any changes (useful for version updates, etc.)
             bat "git add ."
             // Commit changes with a message. Adjust the message as necessary.
-            bat 'git commit -m "Commit message explaining the changes" || echo "No changes to commit"'
+            bat 'git commit -m "Commit message explaining the changes"'
             // Push changes back to the origin
-            bat "git push origin master"
+            bat "git push"
 
             // Perform the release using Gradle. Adjust versions as necessary.
             bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
