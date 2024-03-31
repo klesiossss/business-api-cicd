@@ -37,6 +37,9 @@ stage('Build') {
             // Pull the latest changes from the remote master branch
             bat "git pull origin master"
              bat "git fetch"
+
+             bat "git fetch origin"
+             bat "git merge-base --is-ancestor HEAD origin/master"
 bat "git status"
             // Add all changes to the staging area
             bat "git add . "
