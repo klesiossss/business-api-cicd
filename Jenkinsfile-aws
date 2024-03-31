@@ -36,17 +36,18 @@ stage('Build') {
 
             // Pull the latest changes from the remote master branch
             bat "git pull origin master --rebase"
-
+bat "git status"
             // Add all changes to the staging area
-           // bat "git add . "
-
+            bat "git add . "
+bat "git status"
             // Commit the changes with a generic commit message
-            //bat "git commit -m 'Commit'"
-            bat "${gradlewCmd} --stop"
+            bat "git commit -m 'Commit'"
+           // bat "${gradlewCmd} --stop"
             // Push the changes to the remote repository
-          //  bat "git push"
-
+            bat "git push"
             bat "git status"
+
+
             bat "git diff"
 
             // Perform the release using Gradle. Adjust versions as necessary.
