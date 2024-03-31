@@ -46,6 +46,20 @@ stage('Deploy to AWS') {
     steps {
         script {
             try {
+
+             script {
+                        // Call your Gradle build
+                        bat "gradlew.bat build writeDockerImageNameToFile" // Assuming you're using Windows batch command
+
+                        // Read the imageName from the file
+                        def dockerImageName = readFile("${WORKSPACE}/build/dockerImageName.txt").trim()
+
+                        // Now dockerImageName contains your Docker image name, and you can use it in subsequent steps
+                        echo "Docker Image Name: ${dockerImageName}"
+
+                        // Example: Pulling the latest Docker image
+                        bat "docker pull ${dockerImageName}"
+
                 withAWS(credentials: 'aws-credentials', region: 'eu-central-1') {
                     bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
                 }

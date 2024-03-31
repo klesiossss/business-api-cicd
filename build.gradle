@@ -92,6 +92,18 @@ java {
     }
 }
 
+task writeDockerImageNameToFile {
+    doLast {
+        new File("$buildDir/dockerImageName.txt").text = imageName
+    }
+}
+
+build.dependsOn writeDockerImageNameToFile
+// or if you have a specific Docker task
+docker.dependsOn writeDockerImageNameToFile
+
+
+
 task('doStuff', type: Copy) {
     println 'configuring task'
     doFirst {
