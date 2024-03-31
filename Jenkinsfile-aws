@@ -37,9 +37,7 @@ stage('Build') {
             // Pull the latest changes from the remote master branch
             bat "git pull"
 
-                            bat "git rebase --continue"
 
-                       //     bat "git rebase --abort"
 
 
 
