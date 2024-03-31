@@ -6,23 +6,25 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+     stage('Build') {
             steps {
                 script {
                     if (isUnix()) {
-                        error('This pipeline script is meant to run on Windows only.')
+                        error('Este script de pipeline deve ser executado apenas no Windows.')
                     }
                     def gradlewCmd = 'gradlew.bat'
 
                     bat "${gradlewCmd} clean"
                     bat "${gradlewCmd} build --rerun-tasks"
 
+                    // Obtém o nome da branch local
                     def branchName = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
-                     "C:\Developer\Tools\git\mingw64\bin\git.exe branch --set-upstream-to=origin/master ${branchName}"
+
+                    // Define a branch local para rastrear a branch remota 'origin/master'
+                    bat "git branch --set-upstream-to=origin/master ${branchName}"
+
+                    // Executa o comando release
                     bat "${gradlewCmd} release"
-
-
-
                 }
             }
         }
