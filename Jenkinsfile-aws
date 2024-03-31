@@ -46,7 +46,8 @@ stage('Build') {
             // Push the changes to the remote repository
           //  bat "git push"
 
-
+            bat "git status"
+            bat "git diff"
 
             // Perform the release using Gradle. Adjust versions as necessary.
             bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
