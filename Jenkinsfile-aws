@@ -36,7 +36,7 @@ stage('Build') {
 
             bat "git add . "
 
-            bat "git commit -m "Commit" "
+            bat "git commit -m 'Commit' "
 
             bat "git push"
 
