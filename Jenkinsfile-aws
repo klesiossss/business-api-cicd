@@ -16,7 +16,13 @@ pipeline {
 
                     bat "${gradlewCmd} clean"
                     bat "${gradlewCmd} build --rerun-tasks"
+
+                    def branchName = bat(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+                    bat "C:\Developer\Tools\git\mingw64\bin\git.exe branch --set-upstream-to=origin/master ${branchName}"
                     bat "${gradlewCmd} release"
+
+
+
                 }
             }
         }
