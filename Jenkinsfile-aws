@@ -32,6 +32,7 @@ pipeline {
             }
             steps {
                 script {
+                     bat "${gradlewCmd} build"
                     def gradlewCmd = 'gradlew.bat'
                     bat "${gradlewCmd} docker"
                     bat "docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}"
