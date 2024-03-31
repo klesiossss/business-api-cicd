@@ -79,6 +79,8 @@ release {
     }
 }
 
+afterReleaseBuild.dependsOn 'publish'
+
 
 
 
