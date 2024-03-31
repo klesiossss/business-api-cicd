@@ -32,11 +32,11 @@ stage('Build') {
             bat "git checkout master"
             bat "git status"
 
-            bat "git pull origin master "
+            bat "git pull "
 
             bat "git add . "
 
-            bat 'git commit -m "Commit message explaining the changes"'
+            bat "git commit -m "Commit" "
 
             bat "git push"
 
