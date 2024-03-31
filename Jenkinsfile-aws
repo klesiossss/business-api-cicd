@@ -27,8 +27,8 @@ stage('Build') {
         bat "git checkout master"
 
          bat "git pull "
-      //  bat 'git commit -m "Your commit message here"'
-        //  bat "git push origin master"
+        bat 'git commit -m "Your commit message here"'
+          bat "git push origin master"
             // Executa o comando release
             bat "${gradlewCmd} release"
         }
