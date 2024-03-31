@@ -63,7 +63,6 @@ task printVersion {
     doLast {
 
         println 'imagemName: '+ imageName
-        println 'version: '+ version
         println 'project.version: '+ project.version
 
     }
