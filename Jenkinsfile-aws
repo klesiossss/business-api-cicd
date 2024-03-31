@@ -27,6 +27,7 @@ stage('Build') {
         bat "git checkout master"
 
          bat "git pull "
+          bat "git add . "
         bat 'git commit -m "Your commit message here"'
           bat "git push origin master"
             // Executa o comando release
