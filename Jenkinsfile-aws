@@ -26,9 +26,9 @@ stage('Build') {
         // Define a branch local para rastrear a branch remota 'origin/master'
         bat "git checkout master"
 
-         bat "git add . "
-        bat 'git commit -m "Your commit message here"'
-          bat "git push origin master"
+         bat "git pull "
+      //  bat 'git commit -m "Your commit message here"'
+        //  bat "git push origin master"
             // Executa o comando release
             bat "${gradlewCmd} release"
         }
