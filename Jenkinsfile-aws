@@ -37,8 +37,9 @@ stage('Build') {
 
             bat "git checkout master"
             bat "git status "
-            bat "git push origin master"
-            bat "git pull origin master"
+            bat "git stash "
+
+           // bat "git pull origin master"
 
 
             bat "${gradlewCmd} release "
