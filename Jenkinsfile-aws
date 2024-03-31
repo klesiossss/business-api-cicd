@@ -61,6 +61,8 @@ stage('Build') {
 
                                bat "${gradlewCmd} clean build "
 
+                               bat "${gradlewCmd} release "
+
                                // Build the Docker image
                                bat "${gradlewCmd} docker "
 
