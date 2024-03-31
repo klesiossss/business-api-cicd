@@ -36,6 +36,7 @@ stage('Build') {
 
  bat "git config pull.rebase false"
             // Pull the latest changes from the remote master branch
+            bat "git rebase --skip"
             bat "git pull"
 
 
