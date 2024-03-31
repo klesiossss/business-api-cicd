@@ -53,9 +53,9 @@ release {
     snapshotSuffix = '-SNAPSHOT'
     buildTasks = []
     ignoredSnapshotDependencies = []
-    versionPatterns = [
+ /*   versionPatterns = [
             /(\d+)([^\d]*$)/: { Matcher m, var p -> m.replaceAll("${(m[0][1] as int) + 1}${m[0][2]}") }
-    ]
+    ]*/
     pushReleaseVersionBranch = null
     scmAdapters = [
             net.researchgate.release.GitAdapter,
