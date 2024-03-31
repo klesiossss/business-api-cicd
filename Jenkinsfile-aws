@@ -34,6 +34,7 @@ stage('Build') {
             // Check the status of the repository
             bat "git status"
 
+ bat "git config pull.rebase false"
             // Pull the latest changes from the remote master branch
             bat "git pull"
 
