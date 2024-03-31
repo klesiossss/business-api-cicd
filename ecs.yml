@@ -17,7 +17,7 @@ Resources:
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: deployment-cluster2
+      ClusterName: deployment-cluster3
   ServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
