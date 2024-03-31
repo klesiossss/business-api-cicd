@@ -61,7 +61,7 @@ String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:${proje
 
 task printVersion {
     doLast {
-        println 'Version: ' + scmVersion.version
+
         println 'imagemName: '+ imageName
         println 'version: '+ version
         println 'project.version: '+ project.version
