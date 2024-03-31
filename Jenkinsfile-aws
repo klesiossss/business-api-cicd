@@ -26,18 +26,19 @@ stage('Build') {
             }
             def gradlewCmd = 'gradlew.bat'
 
-             bat "${gradlewCmd} --stop  "
+
 
              String gradleCachePath = "${env.USERPROFILE}\\.gradle\\caches"
-             echo "Deleting Gradle caches from: ${gradleCachePath}"
-             bat "rmdir /s /q ${gradleCachePath.replaceAll('\\\\', '\\\\\\\\')}"
+            // echo "Deleting Gradle caches from: ${gradleCachePath}"
+             //bat "${gradlewCmd} --stop  "
+             //bat "rmdir /s /q ${gradleCachePath.replaceAll('\\\\', '\\\\\\\\')}"
              bat "${gradlewCmd} clean build "
 
             // Update PATH to include Git
             env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
 
-            bat "git checkout origin/master"
-             bat "git checkout pull"
+            bat "git checkout master"
+
               bat "git push origin master"
             bat "git pull origin master"
 
