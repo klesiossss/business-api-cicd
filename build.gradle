@@ -127,6 +127,10 @@ publishing {
         maven {
             url = "http://localhost:8081/repository/maven-central/"
             allowInsecureProtocol = true // Allow insecure protocol (HTTP)
+            credentials {
+                username = project.findProperty("nexusUsername") ?: "admin"
+                password = project.findProperty("nexusPassword") ?: "Oiselk@123"
+            }
         }
     }
     publications {
