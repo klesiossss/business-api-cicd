@@ -2,6 +2,7 @@ import java.util.regex.Matcher
 
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE' // Update to the latest version
     id 'org.springframework.boot' version '2.5.5' // Use a valid Spring Boot plugin version
     id 'net.researchgate.release' version '3.0.2'
@@ -52,6 +53,34 @@ release {
 
     git {
         requireBranch.set('master')
+    }
+}
+
+
+publishing {
+    repositories {
+        maven {
+            url = "https://your-company-nexus-repo.com/repositories"
+            allowInsecureProtocol=true
+            credentials{
+                username= project.findProperty("nexusUsername") ?: "admin"
+                password = project.findProperty("nexusPassword") ?: "Oiselk@123"
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.exemple'
+            artifactId='your-artifact-id'
+            version='1.0.0'
+            from components.java
+        }
+    }
+}
+
+tasks {
+    afterReleaseBuild {
+        dependsOn publish
     }
 }
 
