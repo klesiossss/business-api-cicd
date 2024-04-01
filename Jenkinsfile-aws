@@ -36,6 +36,8 @@ bat "git clean --force"
             // Check the status of the repository
             bat "git status"
 
+bat "git config --global user.name "klesiossss" "
+bat "git config --global user.email "klesiossss@gmail.com" "
 
             bat "git pull"
   bat "git push"
