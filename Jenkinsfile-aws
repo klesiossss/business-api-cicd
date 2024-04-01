@@ -22,6 +22,8 @@ pipeline {
 
 
                       sh "${gradlewCmd} clean build"
+                      sh "git checkout develop"
+                      sh "git clean --force"
                      sh "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
                     }
                 }
