@@ -125,11 +125,17 @@ release {
 publishing {
     repositories {
         maven {
-            url = "http://localhost:8081/#admin/repository/repositories"
+            url = "http://localhost:8081/repository/maven-central/"
         }
     }
     publications {
         maven(MavenPublication) {
+            // Specify the groupId, artifactId, and version for the publication
+            groupId = 'com.example' // Replace 'com.example' with your actual group ID
+            artifactId = 'your-artifact-id'
+            version = '1.0.0'
+
+            // Attach the JAR file to the publication
             from components.java
         }
     }
