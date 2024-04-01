@@ -36,12 +36,9 @@ bat "git clean --force"
             // Check the status of the repository
             bat "git status"
 
- //bat "git config pull.rebase false"
-            // Pull the latest changes from the remote master branch
-            bat "git rebase --skip"
+
             bat "git pull"
 
-  bat "git clean --force"
 
 
 
