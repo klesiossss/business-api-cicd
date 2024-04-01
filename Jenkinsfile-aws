@@ -21,8 +21,8 @@ pipeline {
 
 
 
-                      sh "${gradlewCmd} clean"
-                     sh "${gradlewCmd} assemble"
+                      sh "${gradlewCmd} clean build"
+                     sh "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
                     }
                 }
             }
