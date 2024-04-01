@@ -125,7 +125,7 @@ release {
 publishing {
     repositories {
         maven {
-            url = "http://localhost:8081/repository/maven-public/"
+            url = "http://localhost:8081/repository/myRepo/"
             allowInsecureProtocol = true // Allow insecure protocol (HTTP)
             credentials {
                 username = project.findProperty("nexusUsername") ?: "admin"
