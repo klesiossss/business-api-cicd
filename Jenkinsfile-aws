@@ -29,7 +29,7 @@ stage('Build') {
             env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
 
             // Checkout the master branch
-            bat "git checkout master"
+           // bat "git checkout master"
 
 
 bat "git clean --force"
