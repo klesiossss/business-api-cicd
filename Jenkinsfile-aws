@@ -1,11 +1,14 @@
 pipeline {
     agent any
 
+
+
     triggers {
         pollSCM '* * * * *'
     }
      environment {
             JAVA_HOME = '/Users/klesiosilva/Library/Java/JavaVirtualMachines/corretto-11.0.20.1/Contents/Home'
+             GIT_PATH = '/usr/local/bin/git'
         }
 
     stages {
@@ -22,8 +25,15 @@ pipeline {
 
 
                       sh "${gradlewCmd} clean build"
-                      sh "git checkout develop"
-                      sh "git clean --force"
+
+                           sh '''
+                                          export PATH="${GIT_PATH}:${PATH}"
+                                          # Now you can use `git` command in subsequent steps
+                                               sh "git checkout develop"
+                                                sh "git clean --force"
+                                          # Other Git commands can be executed here
+                                      '''
+
                      sh "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
                     }
                 }
