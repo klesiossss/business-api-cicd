@@ -42,13 +42,13 @@ stage('Build') {
            bat "git commit -m 'Commit'"
            git push
          bat "git checkout master"
-         bat "git merge temp-branch"
+       //  bat "git merge temp-branch"
 
 
 
 
     //        bat "git pull"
-  bat "git push"
+  //bat "git push"
 
 
 
