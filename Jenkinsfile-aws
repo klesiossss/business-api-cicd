@@ -26,15 +26,7 @@ pipeline {
 
                       sh "${gradlewCmd} clean build"
 
-                           sh '''
-                                          export PATH="${GIT_PATH}:${PATH}"
-                                          # Now you can use `git` command in subsequent steps
-                                                "git checkout develop"
-                                                 "git clean --force"
-                                                git config --global user.name "klesiossss"
-                                                git config --global user.email "klesiossss@gmail.com"
 
-                            '''
 
                      sh "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
                     }
