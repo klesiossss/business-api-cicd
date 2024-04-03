@@ -32,15 +32,23 @@ stage('Build') {
            // bat "git checkout master"
 
 
-bat "git clean --force"
-            // Check the status of the repository
-            bat "git status"
+//bat "git clean --force"
 
-//bat "git config --global user.name "klesiossss"
-//bat "git config --global user.email "klesiossss@gmail.com"
+        bat "git checkout -b temp-branch"
+
+        bat "git merge master"
+         bat "git status"
+           bat "git add . "
+           bat "git commit -m 'Commit'"
+           git push
+         bat "git checkout master"
+         bat "git merge temp-branch"
+
+
+
 
     //        bat "git pull"
-  //bat "git push"
+  bat "git push"
 
 
 
