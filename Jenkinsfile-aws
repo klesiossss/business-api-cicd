@@ -50,13 +50,13 @@ stage('Build Docker image') {
     }
     steps {
         script {
-            def gradlewCmd = 'gradlew.bat'
+
             if (isUnix()) {
                 gradlewCmd = './gradlew'
             }
 
             // Run your existing Docker build command
-            sh "${gradlewCmd} docker"
+            sh "./gradlew docker"
             sh 'docker login --username=${env.DOCKER_HUB_LOGIN_USR} --password=${env.DOCKER_HUB_LOGIN_PSW}'
             sh './gradlew dockerPush'
         }
