@@ -23,12 +23,11 @@ pipeline {
                           echo "JAVA_HOME: ${env.JAVA_HOME}"
 
 
-
                       sh "${gradlewCmd} clean build"
 
 
 
-                     sh "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
+                    // sh "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
                     }
                 }
             }
@@ -70,49 +69,27 @@ stage('Deploy to AWS') {
     }
     steps {
         script {
-            // Flag to track deployment status
-            def deploymentSuccessful = false
-            def gradlewCmd = 'gradlew.bat'
+
                    if (isUnix()) {
                       gradlewCmd = './gradlew'
                      }
 
-            try {
-                // Wrap AWS commands with withAWS to use configured AWS credentials and region
+
                 withAWS(credentials: 'aws-credentials', region: 'eu-central-1') {
-                    // Attempt to migrate/deploy the CloudFormation stack
+
                     sh "${gradlewCmd} awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
 
-                    // If the deployment command succeeds, set the flag to true
-                    deploymentSuccessful = true
-                }
-            } catch (Exception e) {
-                // Log the error
-                echo "Deployment failed: ${e.getMessage()}"
-            } finally {
-                if (!deploymentSuccessful) {
-                    // Handle rollback if deployment was not successful
-                    echo "Initiating rollback..."
 
-                    // Insert your rollback logic here. This could involve calling a script to revert to a previous stack snapshot,
-                    // delete the current stack, or any other rollback mechanism appropriate for your deployment
-                    // For example, a rollback to a previous stack snapshot might look like this:
-                    sh "{gradlewCmd} awsCfnRollbackStack -PstackName=spring-boot-api-exemple-stack"
-
-                    // Note: Ensure you have a rollback strategy. AWS CloudFormation has built-in rollback capabilities for failed stack updates,
-                    // but you might need custom logic for more complex scenarios.
-                } else {
-                    echo "Deployment successful."
-                }
-            }
+           }
         }
     }
 }
 
 
 
-    }
 
+
+ }
  }
 
 
