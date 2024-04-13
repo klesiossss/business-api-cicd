@@ -15,59 +15,11 @@ stage('Build') {
             }
             def gradlewCmd = 'gradlew.bat'
 
-            // Define the Gradle cache path
-            String gradleCachePath = "${env.USERPROFILE}\\.gradle\\caches"
-            // Uncomment the lines below if you need to clear the Gradle cache before building
-            // echo "Deleting Gradle caches from: ${gradleCachePath}"
-             //bat "${gradlewCmd} --stop"
-             //bat "rmdir /s /q ${gradleCachePath.replaceAll('\\\\', '\\\\\\\\')}"
-
             // Clean and build the project
             bat "${gradlewCmd} clean build"
 
-            // Update PATH to include Git (adjust as necessary for your system)
-            env.PATH = "C:\\Developer\\Tools\\git\\mingw64\\bin;" + env.PATH
 
-            // Checkout the master branch
-           // bat "git checkout master"
-
-
-//bat "git clean --force"
-
-        bat "git checkout -b temp-branch"
-
-        bat "git merge master"
-         bat "git status"
-           bat "git add . "
-           bat "git commit -m 'Commit'"
-           git push
-         bat "git checkout master"
-       //  bat "git merge temp-branch"
-
-
-
-
-    //        bat "git pull"
-  //bat "git push"
-
-
-
-           //  bat "git fetch origin"
-            // bat "git merge-base --is-ancestor HEAD origin/master"
-bat "git status"
-
-            // Commit the changes with a generic commit message
-          //  bat "git commit -m 'Commit'"
-           // bat "${gradlewCmd} --stop"
-
-
-
-
-
-
-            // Perform the release using Gradle. Adjust versions as necessary.
-            bat "${gradlewCmd} release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=1.0.0 -Prelease.newVersion=1.1.0-SNAPSHOT"
-        }
+       }
     }
 }
 
@@ -108,17 +60,6 @@ stage('Deploy to AWS') {
         script {
             try {
 
-                        // Call your Gradle build
-                      //  bat "gradlew.bat build  writeDockerImageNameToFile" // Assuming you're using Windows batch command
-
-                        // Read the imageName from the file
-                        //def dockerImageName = readFile("${WORKSPACE}/build/dockerImageName.txt").trim()
-
-                        // Now dockerImageName contains your Docker image name, and you can use it in subsequent steps
-                        //echo "Docker Image Name: ${dockerImageName}"
-
-                        // Example: Pulling the latest Docker image
-                       // bat "docker pull ${dockerImageName}"
 
                 withAWS(credentials: 'aws-credentials', region: 'eu-central-1') {
                     bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
