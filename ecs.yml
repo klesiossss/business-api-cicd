@@ -2,26 +2,20 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   SubnetID:
     Type: String
-    Default: "subnet-03e548ac825b25858"
   ServiceName:
     Type: String
   ServiceVersion:
     Type: String
   DockerHubUsername:
     Type: String
-  VpcId:                       # Add
-    Type: String
-    Default: "vpc-0dbebaf6039f5ff02"
-    Description: The VPC ID where the service will be deployed.
 Resources:
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: deployment-cluster3
+      ClusterName: deployment-example-cluster
   ServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      VpcId: !Ref VpcId        # Associate with VPC
       GroupName: ServiceSecurityGroup
       GroupDescription: Security group for service
       SecurityGroupIngress:
