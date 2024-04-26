@@ -1,7 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  SubnetID:
-    Type: String
   ServiceName:
     Type: String
   ServiceVersion:
@@ -14,16 +12,19 @@ Resources:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: deployment-example-cluster
+
   ServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: ServiceSecurityGroup
       GroupDescription: Security group for service
+      VpcId: vpc-01cad105676811574
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 8080
           ToPort: 8080
           CidrIp: 0.0.0.0/0
+
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -39,12 +40,8 @@ Resources:
             - ContainerPort: 8080
           Secrets:
             - Name: clientId # The name of the environment variable in your container
-              ValueFrom: arn:aws:secretsmanager:us-east-1:231913233830:secret:ClientIdSecret-jGCH57nuAlWc-ClllF5 # ARN of your secret
-            - Name: clientSecret # The name of the environment variable in your container
-              ValueFrom: arn:aws:secretsmanager:us-east-1:231913233830:secret:ClientSecretSecret-TDLu4Z7n1yjV-RMYZui
-      RequiresCompatibilities:
-        - EC2
-        - FARGATE
+              ValueFrom: arn:aws:secretsmanager:us-east-1:231913233830:secret:ClientIdSecret-jGCH57nu
+
   Service:
     Type: AWS::ECS::Service
     Properties:
@@ -57,6 +54,6 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           Subnets:
-            - !Ref SubnetID
+            - subnet-0b97eefecf821689e  # Specify your subnet ID here
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
