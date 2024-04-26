@@ -60,7 +60,7 @@ stage('Deploy to AWS') {
         script {
             try {
                withAWS(credentials: 'aws-credentials', region: 'us-central-1') {
-                                  bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID}  -Pregion=${env.AWS_REGION}"
+                                  bat "gradlew.bat awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=${env.SUBNET_ID} -PdockerHubUsername=${env.DOCKER_HUB_LOGIN_USR} -Pregion=${env.AWS_REGION}"
                               }
             } catch (Exception e) {
                 // Log the error
