@@ -2,12 +2,14 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   SubnetID:
     Type: String
+    Default: "subnet-0270f905ad580e53c"
   ServiceName:
     Type: String
   ServiceVersion:
     Type: String
   DockerHubUsername:
     Type: String
+
 Resources:
   Cluster:
     Type: AWS::ECS::Cluster
@@ -35,6 +37,10 @@ Resources:
           Image: !Sub ${DockerHubUsername}/${ServiceName}:${ServiceVersion}
           PortMappings:
             - ContainerPort: 8080
+          Secrets:
+            - Name: CLIENT_ID # The name of the environment variable in your container
+              ValueFrom: arn:aws:secretsmanager:region:account-id:secret:secret-name-123 # ARN of your secret
+
       RequiresCompatibilities:
         - EC2
         - FARGATE
