@@ -2,7 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   SubnetID:
     Type: String
-    Default: "subnet-0270f905ad580e53c"
   ServiceName:
     Type: String
   ServiceVersion:
