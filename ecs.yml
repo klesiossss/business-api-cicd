@@ -1,30 +1,28 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
+  SubnetID:
+    Type: String
   ServiceName:
     Type: String
   ServiceVersion:
     Type: String
   DockerHubUsername:
     Type: String
-
 Resources:
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: deployment-example-cluster
-
   ServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: ServiceSecurityGroup
       GroupDescription: Security group for service
-      VpcId: vpc-01cad105676811574
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 8080
           ToPort: 8080
           CidrIp: 0.0.0.0/0
-
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -32,16 +30,14 @@ Resources:
       Cpu: 256
       Memory: 512
       NetworkMode: awsvpc
-      ExecutionRoleArn: "arn:aws:iam::231913233830:role/myfunction-jk"
       ContainerDefinitions:
         - Name: !Sub ${ServiceName}-container
           Image: !Sub ${DockerHubUsername}/${ServiceName}:${ServiceVersion}
           PortMappings:
             - ContainerPort: 8080
-          Secrets:
-            - Name: clientId # The name of the environment variable in your container
-              ValueFrom: arn:aws:secretsmanager:us-east-1:231913233830:secret:ClientIdSecret-jGCH57nu
-
+      RequiresCompatibilities:
+        - EC2
+        - FARGATE
   Service:
     Type: AWS::ECS::Service
     Properties:
@@ -54,6 +50,6 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           Subnets:
-            - subnet-0b97eefecf821689e  # Specify your subnet ID here
+            - !Ref SubnetID
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
